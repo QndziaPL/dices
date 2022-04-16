@@ -1,0 +1,11 @@
+.radioWithLabel {
+    display: flex;
+    align-items: center;
+}
+
+.radioButtonsContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    margin: 20px;
+}

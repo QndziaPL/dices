@@ -8,6 +8,7 @@ interface Props {
 const NamesForRowsColumn: FC<Props> = ({ singleRowHeight }) => {
   return (
     <div>
+      <div style={{ height: singleRowHeight }} />
       <SingleNameForRow name="1" singleRowHeight={singleRowHeight} />
       <SingleNameForRow name="2" singleRowHeight={singleRowHeight} />
       <SingleNameForRow name="3" singleRowHeight={singleRowHeight} />

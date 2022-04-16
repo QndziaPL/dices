@@ -1,16 +1,17 @@
 import React, { FC, useState } from "react";
-import { EMPTY_ROUND, GameState } from "../types/types";
-import SetUpScreen from "../screens/SetUpScreen";
+import { EMPTY_ROUND, GameProgress, GameState } from "../types/types";
+import SetUpScreen from "../screens/SetUpScreen/SetUpScreen";
 import SingleRound from "../screens/SingleRound/SingleRound";
 
-const initialGameState: GameState = {
-  inProgress: false,
+export const INITIAL_GAME_STATE: GameState = {
+  gameProgress: GameProgress.SET_UP,
   activeRound: 1,
   players: {
     number: 2,
     names: ["Player 1", "Player 2", "Player 3", "Player 4"],
   },
   rounds: [EMPTY_ROUND, EMPTY_ROUND, EMPTY_ROUND],
+  activePlayerIndex: 0,
 };
 
 interface Props {
@@ -19,22 +20,23 @@ interface Props {
 }
 
 const Game: FC<Props> = ({ singleRowHeight, screenWidth }) => {
-  const [gameState, setGameState] = useState(initialGameState);
+  const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
+
+  if (gameState.gameProgress === GameProgress.SET_UP) {
+    return <SetUpScreen gameState={gameState} setGameState={setGameState} />;
+  }
+
+  if (gameState.gameProgress === GameProgress.FINISHED) {
+    return <div>game finished</div>;
+  }
 
   return (
-    <div>
-      {!gameState.inProgress ? (
-        <>
-          <SetUpScreen gameState={gameState} setGameState={setGameState} />
-          <SingleRound
-            gameState={gameState}
-            setGameState={setGameState}
-            singleRowHeight={singleRowHeight}
-            screenWidth={screenWidth}
-          />
-        </>
-      ) : null}
-    </div>
+    <SingleRound
+      gameState={gameState}
+      setGameState={setGameState}
+      singleRowHeight={singleRowHeight}
+      screenWidth={screenWidth}
+    />
   );
 };
 

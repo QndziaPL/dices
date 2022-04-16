@@ -26,8 +26,15 @@ export const EMPTY_ROUND: RoundScores = [
   EMPTY_PLAYER_SCORES,
 ];
 
+export enum GameProgress {
+  SET_UP = 1,
+  IN_PROGRESS = 2,
+  FINISHED = 3,
+}
+
 export interface GameState {
-  inProgress: boolean;
+  activePlayerIndex: number;
+  gameProgress: GameProgress;
   activeRound: number;
   players: {
     number: number;

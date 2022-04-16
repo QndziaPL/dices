@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FC } from "react";
-import { FieldName, ScoreFields } from "../../types/types";
+import { FieldName, GameState, ScoreFields } from "../../types/types";
 import "./SingleColumn.css";
 import SingleField from "../SingleField";
 
@@ -7,12 +7,32 @@ interface Props {
   scores: ScoreFields;
   singleRowHeight: number;
   columnWidth: number;
+  gameState: GameState;
+  playerIndex: number;
 }
 
-const SingleColumn: FC<Props> = ({ scores, singleRowHeight, columnWidth }) => {
+const SingleColumn: FC<Props> = ({
+  scores,
+  singleRowHeight,
+  columnWidth,
+  playerIndex,
+  gameState,
+}) => {
   const handleValueChange = (e: ChangeEvent, name: FieldName) => {};
+  const isActive = gameState.activePlayerIndex === playerIndex;
   return (
     <div className="singleColumn">
+      <div
+        style={{
+          height: singleRowHeight,
+          backgroundColor: isActive ? "green" : "#efefef",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {gameState.players.names[playerIndex]}
+      </div>
       <SingleField
         singleRowHeight={singleRowHeight}
         value={scores.school1}
