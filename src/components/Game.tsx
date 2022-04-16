@@ -15,9 +15,10 @@ const initialGameState: GameState = {
 
 interface Props {
   singleRowHeight: number;
+  screenWidth: number;
 }
 
-const Game: FC<Props> = ({ singleRowHeight }) => {
+const Game: FC<Props> = ({ singleRowHeight, screenWidth }) => {
   const [gameState, setGameState] = useState(initialGameState);
 
   return (
@@ -29,6 +30,7 @@ const Game: FC<Props> = ({ singleRowHeight }) => {
             gameState={gameState}
             setGameState={setGameState}
             singleRowHeight={singleRowHeight}
+            screenWidth={screenWidth}
           />
         </>
       ) : null}

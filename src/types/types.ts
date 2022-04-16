@@ -1,21 +1,22 @@
 export const EMPTY_PLAYER_SCORES: ScoreFields = {
-  school1: null,
-  big: null,
-  chance: null,
-  school3: null,
-  school4: null,
-  school5: null,
-  school2: null,
-  school6: null,
-  four: null,
-  full: null,
-  pair: null,
-  poker: null,
-  twoPairs: null,
-  small: null,
-  three: null,
-  afterSchool: null,
-  afterBottom: null,
+  school1: "",
+  big: "",
+  chance: "",
+  school3: "",
+  school4: "",
+  school5: "",
+  school2: "",
+  school6: "",
+  four: "",
+  full: "",
+  pair: "",
+  poker: "",
+  twoPairs: "",
+  small: "",
+  three: "",
+  afterSchool: "",
+  afterBottom: "",
+  schoolAndBottom: "",
 };
 
 export const EMPTY_ROUND: RoundScores = [
@@ -38,23 +39,24 @@ export interface GameState {
 export type RoundScores = ScoreFields[];
 
 export interface ScoreFields {
-  school1: number | null;
-  school2: number | null;
-  school3: number | null;
-  school4: number | null;
-  school5: number | null;
-  school6: number | null;
-  pair: number | null;
-  twoPairs: number | null;
-  three: number | null;
-  small: number | null;
-  big: number | null;
-  full: number | null;
-  four: number | null;
-  poker: number | null;
-  chance: number | null;
-  afterSchool: number | null;
-  afterBottom: number | null;
+  school1: string;
+  school2: string;
+  school3: string;
+  school4: string;
+  school5: string;
+  school6: string;
+  pair: string;
+  twoPairs: string;
+  three: string;
+  small: string;
+  big: string;
+  full: string;
+  four: string;
+  poker: string;
+  chance: string;
+  afterSchool: string;
+  afterBottom: string;
+  schoolAndBottom: string;
 }
 
 export enum FieldName {
@@ -75,4 +77,5 @@ export enum FieldName {
   CHANCE = "chance",
   AFTER_SCHOOL = "afterSchool",
   AFTER_BOTTOM = "afterBottom",
+  SCHOOL_AND_BOTTOM = "schoolAndBottom",
 }

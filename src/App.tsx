@@ -8,19 +8,21 @@ function App() {
   const [singleRowHeight, setSingleRowHeight] = useState(
     window.innerHeight / DIVIDER_FACTOR_FOR_ROW_HEIGHT
   );
-  console.log(singleRowHeight, "tuta height");
-  const updateSingleRowHeight = () => {
+  const [screenWidth, setScreenWidth] = useState(0);
+  const updateSizes = () => {
     setSingleRowHeight(window.innerHeight / DIVIDER_FACTOR_FOR_ROW_HEIGHT);
+    setScreenWidth(window.innerWidth);
   };
   useEffect(() => {
-    window.addEventListener("resize", updateSingleRowHeight);
+    updateSizes();
+    window.addEventListener("resize", updateSizes);
     return () => {
-      window.removeEventListener("resize", updateSingleRowHeight);
+      window.removeEventListener("resize", updateSizes);
     };
   }, []);
   return (
     <div className="App">
-      <Game singleRowHeight={singleRowHeight} />
+      <Game singleRowHeight={singleRowHeight} screenWidth={screenWidth} />
     </div>
   );
 }

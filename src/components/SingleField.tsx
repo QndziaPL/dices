@@ -2,20 +2,33 @@ import React, { ChangeEventHandler, FC } from "react";
 
 interface Props {
   singleRowHeight: number;
-  value: number | null;
+  value: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
+  columnWidth: number;
+  readonly?: boolean;
 }
 
-const SingleField: FC<Props> = ({ singleRowHeight, value, onChange }) => {
+const SingleField: FC<Props> = ({
+  singleRowHeight,
+  value,
+  onChange,
+  columnWidth,
+  readonly,
+}) => {
   return (
-    <div style={{ height: singleRowHeight, position: "relative" }}>
-      <input
-        style={{ height: "100%" }}
-        type="number"
-        value={value ?? undefined}
-        onChange={onChange}
-      />
-    </div>
+    <input
+      disabled={readonly}
+      style={{
+        height: singleRowHeight,
+        display: "block",
+        width: columnWidth,
+        textAlign: "center",
+      }}
+      type="number"
+      value={value ?? undefined}
+      onChange={onChange}
+      size={3}
+    />
   );
 };
 

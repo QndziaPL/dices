@@ -1,5 +1,7 @@
 .singleNameForColumn {
     background-color: #efefef;
     text-align: center;
-    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

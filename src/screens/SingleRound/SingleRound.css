@@ -1,3 +1,7 @@
 .singleRound {
     display: flex;
 }
+
+.playerColumns {
+    display: block;
+}
