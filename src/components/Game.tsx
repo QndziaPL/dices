@@ -5,7 +5,7 @@ import SingleRound from "../screens/SingleRound/SingleRound";
 
 export const INITIAL_GAME_STATE: GameState = {
   gameProgress: GameProgress.SET_UP,
-  activeRound: 1,
+  activeRoundIndex: 0,
   players: {
     number: 2,
     names: ["Player 1", "Player 2", "Player 3", "Player 4"],
@@ -19,8 +19,10 @@ interface Props {
   screenWidth: number;
 }
 
+export const createInitialGameState = () => INITIAL_GAME_STATE;
+
 const Game: FC<Props> = ({ singleRowHeight, screenWidth }) => {
-  const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
+  const [gameState, setGameState] = useState(createInitialGameState());
 
   if (gameState.gameProgress === GameProgress.SET_UP) {
     return <SetUpScreen gameState={gameState} setGameState={setGameState} />;

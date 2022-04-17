@@ -20,10 +20,10 @@ export const EMPTY_PLAYER_SCORES: ScoreFields = {
 };
 
 export const EMPTY_ROUND: RoundScores = [
-  EMPTY_PLAYER_SCORES,
-  EMPTY_PLAYER_SCORES,
-  EMPTY_PLAYER_SCORES,
-  EMPTY_PLAYER_SCORES,
+  { ...EMPTY_PLAYER_SCORES },
+  { ...EMPTY_PLAYER_SCORES },
+  { ...EMPTY_PLAYER_SCORES },
+  { ...EMPTY_PLAYER_SCORES },
 ];
 
 export enum GameProgress {
@@ -35,7 +35,7 @@ export enum GameProgress {
 export interface GameState {
   activePlayerIndex: number;
   gameProgress: GameProgress;
-  activeRound: number;
+  activeRoundIndex: number;
   players: {
     number: number;
     names: string[];

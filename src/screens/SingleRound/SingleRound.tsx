@@ -1,11 +1,11 @@
-import React, { Dispatch, FC } from "react";
-import { GameProgress, GameState } from "../../types/types";
+import React, { ChangeEvent, Dispatch, FC } from "react";
+import { FieldName, GameProgress, GameState } from "../../types/types";
 import "./SingleRound.css";
 import SingleColumn from "../../components/SingleColumn/SingleColumn";
 import NamesForRowsColumn from "../../components/NamesForRowsColumn/NamesForRowsColumn";
 import { SCORE_NAMES_COLUMN_WIDTH } from "../../consts";
 import ActionButton from "../../components/ActionButton";
-import { INITIAL_GAME_STATE } from "../../components/Game";
+import { createInitialGameState } from "../../components/Game";
 
 interface Props {
   gameState: GameState;
@@ -21,7 +21,7 @@ const SingleRound: FC<Props> = ({
   screenWidth,
 }) => {
   const playersScoresToDisplay = [
-    ...gameState.rounds[gameState.activeRound - 1],
+    ...gameState.rounds[gameState.activeRoundIndex],
   ].splice(0, gameState.players.number);
 
   const columnWidth =
@@ -41,51 +41,90 @@ const SingleRound: FC<Props> = ({
 
   const resetGame = () => {
     if (window.confirm("Czy na pewno chcesz zresetować grę?")) {
-      setGameState(INITIAL_GAME_STATE);
+      setGameState(createInitialGameState());
     }
   };
 
   const nextRound = () => {
-    if (gameState.activeRound === 3) {
+    if (gameState.activeRoundIndex === 2) {
       setGameState((prev) => ({
         ...prev,
         gameProgress: GameProgress.FINISHED,
       }));
     } else {
-      setGameState((prev) => ({ ...prev, activeRound: prev.activeRound + 1 }));
+      setGameState((prev) => ({
+        ...prev,
+        activeRoundIndex: prev.activeRoundIndex + 1,
+      }));
     }
   };
 
-  const nextRoundDisabled = false;
+  const previousRound = () => {
+    setGameState((prev) => ({
+      ...prev,
+      activeRoundIndex: prev.activeRoundIndex - 1,
+    }));
+  };
 
-  const gameContent = (
-    <div className="singleRound">
-      <NamesForRowsColumn singleRowHeight={singleRowHeight} />
-      <div className="playerColumns">
-        <div style={{ display: "flex" }}>
-          {playersScoresToDisplay.map((scores, index) => (
-            <SingleColumn
-              gameState={gameState}
-              playerIndex={index}
-              columnWidth={columnWidth}
-              scores={scores}
-              singleRowHeight={singleRowHeight}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  const nextRoundDisabled = false; // TODO: dodać logikę
+
+  const handleValueChange = (
+    isActive: boolean,
+    playerIndex: number,
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldName
+  ) => {
+    console.log(playerIndex);
+    if (!isActive) return;
+    const newGameState = { ...gameState };
+    console.log(newGameState.rounds, "rounds");
+    console.log(gameState.activeRoundIndex, "tutaj round index");
+    newGameState.rounds[gameState.activeRoundIndex][playerIndex][name] =
+      e.target.value;
+    setGameState(newGameState);
+  };
+
   return (
     <div>
-      <h1 style={{ marginBottom: 10 }}>Runda {gameState.activeRound}</h1>
-      {gameContent}
+      <h1 style={{ marginBottom: 10 }}>
+        Runda {gameState.activeRoundIndex + 1}
+      </h1>
+      <div className="singleRound">
+        <NamesForRowsColumn singleRowHeight={singleRowHeight} />
+        <div className="playerColumns">
+          <div style={{ display: "flex" }}>
+            {playersScoresToDisplay.map((scores, index) => (
+              <SingleColumn
+                handleValueChange={(isActive, e, name) =>
+                  handleValueChange(isActive, index, e, name)
+                }
+                key={index}
+                playerScores={scores}
+                setGameState={setGameState}
+                gameState={gameState}
+                playerIndex={index}
+                columnWidth={columnWidth}
+                singleRowHeight={singleRowHeight}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
       <ActionButton content="następny gracz" action={nextPlayer} />
       <ActionButton
         disabled={nextRoundDisabled}
-        content={gameState.activeRound === 3 ? "zakończ grę" : "następna runda"}
+        content={
+          gameState.activeRoundIndex === 2 ? "zakończ grę" : "następna runda"
+        }
         action={nextRound}
       />
+      {gameState.activeRoundIndex > 0 && (
+        <ActionButton
+          content="wróć do poprzedniej rundy"
+          action={previousRound}
+          style={{ backgroundColor: "orange", display: "block", marginTop: 30 }}
+        />
+      )}
       <ActionButton
         content="reset gry"
         action={resetGame}

@@ -76,7 +76,7 @@ const SetUpScreen: FC<Props> = ({ setGameState, gameState }) => {
         </div>
       </div>
       {playerNamesToEdit.map((name, index) => (
-        <div>
+        <div key={index}>
           <span style={{ marginRight: 5 }}>{index + 1}</span>
           <input
             value={name}
