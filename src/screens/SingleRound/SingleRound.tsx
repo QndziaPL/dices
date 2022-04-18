@@ -1,124 +1,76 @@
-import React, { ChangeEvent, Dispatch, FC } from "react";
-import { FieldName, GameProgress, GameState } from "../../types/types";
+import React, { ChangeEvent, FC } from "react";
+import { FieldName, PlayerKey, Players, RoundScores } from "../../types/types";
 import "./SingleRound.css";
 import SingleColumn from "../../components/SingleColumn/SingleColumn";
 import NamesForRowsColumn from "../../components/NamesForRowsColumn/NamesForRowsColumn";
 import { SCORE_NAMES_COLUMN_WIDTH } from "../../consts";
 import ActionButton from "../../components/ActionButton";
-import { createInitialGameState } from "../../components/Game";
 
 interface Props {
-  gameState: GameState;
-  setGameState: Dispatch<React.SetStateAction<GameState>>;
+  activePlayer: PlayerKey;
   singleRowHeight: number;
   screenWidth: number;
+  resetGame: () => void;
+  nextRound: () => void;
+  activeRound: number;
+  previousRound: (something: any) => void;
+  players: Players;
+  nextPlayer: () => void;
+  roundWithScores: RoundScores;
+  updateSingleScoreForActivePlayer: (
+    e: ChangeEvent<HTMLInputElement>,
+    name: FieldName
+  ) => void;
 }
 
 const SingleRound: FC<Props> = ({
-  setGameState,
-  gameState,
+  activeRound,
+  activePlayer,
   singleRowHeight,
   screenWidth,
+  resetGame,
+  nextRound,
+  previousRound,
+  players,
+  nextPlayer,
+  updateSingleScoreForActivePlayer,
+  roundWithScores,
 }) => {
-  const playersScoresToDisplay = [
-    ...gameState.rounds[gameState.activeRoundIndex],
-  ].splice(0, gameState.players.number);
-
-  const columnWidth =
-    (screenWidth - SCORE_NAMES_COLUMN_WIDTH) / gameState.players.number;
-
-  const nextPlayer = () => {
-    setGameState((prev) => {
-      const {
-        activePlayerIndex,
-        players: { number },
-      } = prev;
-      const newPlayerIndex =
-        activePlayerIndex + 1 < number ? activePlayerIndex + 1 : 0;
-      return { ...prev, activePlayerIndex: newPlayerIndex };
-    });
-  };
-
-  const resetGame = () => {
-    if (window.confirm("Czy na pewno chcesz zresetować grę?")) {
-      setGameState(createInitialGameState());
-    }
-  };
-
-  const nextRound = () => {
-    if (gameState.activeRoundIndex === 2) {
-      setGameState((prev) => ({
-        ...prev,
-        gameProgress: GameProgress.FINISHED,
-      }));
-    } else {
-      setGameState((prev) => ({
-        ...prev,
-        activeRoundIndex: prev.activeRoundIndex + 1,
-      }));
-    }
-  };
-
-  const previousRound = () => {
-    setGameState((prev) => ({
-      ...prev,
-      activeRoundIndex: prev.activeRoundIndex - 1,
-    }));
-  };
+  const columnWidth = (screenWidth - SCORE_NAMES_COLUMN_WIDTH) / players.number;
 
   const nextRoundDisabled = false; // TODO: dodać logikę
 
-  const handleValueChange = (
-    isActive: boolean,
-    playerIndex: number,
-    e: ChangeEvent<HTMLInputElement>,
-    name: FieldName
-  ) => {
-    console.log(playerIndex);
-    if (!isActive) return;
-    const newGameState = { ...gameState };
-    console.log(newGameState.rounds, "rounds");
-    console.log(gameState.activeRoundIndex, "tutaj round index");
-    newGameState.rounds[gameState.activeRoundIndex][playerIndex][name] =
-      e.target.value;
-    setGameState(newGameState);
-  };
-
   return (
     <div>
-      <h1 style={{ marginBottom: 10 }}>
-        Runda {gameState.activeRoundIndex + 1}
-      </h1>
+      <h1 style={{ marginBottom: 10 }}>Runda {activeRound}</h1>
       <div className="singleRound">
         <NamesForRowsColumn singleRowHeight={singleRowHeight} />
         <div className="playerColumns">
           <div style={{ display: "flex" }}>
-            {playersScoresToDisplay.map((scores, index) => (
-              <SingleColumn
-                handleValueChange={(isActive, e, name) =>
-                  handleValueChange(isActive, index, e, name)
-                }
-                key={index}
-                playerScores={scores}
-                setGameState={setGameState}
-                gameState={gameState}
-                playerIndex={index}
-                columnWidth={columnWidth}
-                singleRowHeight={singleRowHeight}
-              />
-            ))}
+            {Object.entries(roundWithScores).map(
+              ([playerKey, scores], index) => (
+                <SingleColumn
+                  handleValueChange={updateSingleScoreForActivePlayer}
+                  key={index}
+                  playerScores={scores}
+                  playerKey={index}
+                  columnWidth={columnWidth}
+                  singleRowHeight={singleRowHeight}
+                  isPlayerActive={playerKey === activePlayer}
+                  playerName={players.names[index]}
+                />
+              )
+            )}
           </div>
         </div>
       </div>
       <ActionButton content="następny gracz" action={nextPlayer} />
       <ActionButton
         disabled={nextRoundDisabled}
-        content={
-          gameState.activeRoundIndex === 2 ? "zakończ grę" : "następna runda"
-        }
+        content={activeRound === 3 ? "zakończ grę" : "następna runda"}
         action={nextRound}
       />
-      {gameState.activeRoundIndex > 0 && (
+      {activeRound > 1 && (
         <ActionButton
           content="wróć do poprzedniej rundy"
           action={previousRound}

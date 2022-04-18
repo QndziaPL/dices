@@ -2,7 +2,7 @@ import React, { CSSProperties, FC } from "react";
 
 interface Props {
   content: string;
-  action: () => void;
+  action: (something: any) => void;
   style?: CSSProperties;
   disabled?: boolean;
 }

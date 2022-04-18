@@ -19,12 +19,12 @@ export const EMPTY_PLAYER_SCORES: ScoreFields = {
   schoolAndBottom: "",
 };
 
-export const EMPTY_ROUND: RoundScores = [
-  { ...EMPTY_PLAYER_SCORES },
-  { ...EMPTY_PLAYER_SCORES },
-  { ...EMPTY_PLAYER_SCORES },
-  { ...EMPTY_PLAYER_SCORES },
-];
+export const EMPTY_ROUND: RoundScores = {
+  player1: EMPTY_PLAYER_SCORES,
+  player2: EMPTY_PLAYER_SCORES,
+  player3: EMPTY_PLAYER_SCORES,
+  player4: EMPTY_PLAYER_SCORES,
+};
 
 export enum GameProgress {
   SET_UP = 1,
@@ -32,18 +32,42 @@ export enum GameProgress {
   FINISHED = 3,
 }
 
+export enum RoundKey {
+  ROUND_1 = "round1",
+  ROUND_2 = "round2",
+  ROUND_3 = "round3",
+}
+
+export interface Players {
+  number: number;
+  names: string[];
+}
+
 export interface GameState {
   activePlayerIndex: number;
   gameProgress: GameProgress;
-  activeRoundIndex: number;
-  players: {
-    number: number;
-    names: string[];
+  activeRound: number;
+  players: Players;
+  rounds: {
+    [RoundKey.ROUND_1]: RoundScores;
+    [RoundKey.ROUND_2]: RoundScores;
+    [RoundKey.ROUND_3]: RoundScores;
   };
-  rounds: RoundScores[];
 }
 
-export type RoundScores = ScoreFields[];
+export enum PlayerKey {
+  PLAYER_1 = "player1",
+  PLAYER_2 = "player2",
+  PLAYER_3 = "player3",
+  PLAYER_4 = "player4",
+}
+
+export interface RoundScores {
+  [PlayerKey.PLAYER_1]: ScoreFields;
+  [PlayerKey.PLAYER_2]: ScoreFields;
+  [PlayerKey.PLAYER_3]: ScoreFields;
+  [PlayerKey.PLAYER_4]: ScoreFields;
+}
 
 export interface ScoreFields {
   school1: string;

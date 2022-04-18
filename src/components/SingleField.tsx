@@ -6,6 +6,7 @@ interface Props {
   onChange: ChangeEventHandler<HTMLInputElement>;
   columnWidth: number;
   readonly?: boolean;
+  activePlayer?: boolean;
 }
 
 const SingleField: FC<Props> = ({
@@ -14,6 +15,7 @@ const SingleField: FC<Props> = ({
   onChange,
   columnWidth,
   readonly,
+  activePlayer,
 }) => {
   return (
     <input
@@ -23,6 +25,7 @@ const SingleField: FC<Props> = ({
         display: "block",
         width: columnWidth,
         textAlign: "center",
+        pointerEvents: activePlayer ? "all" : "none",
       }}
       type="number"
       value={value ?? undefined}
